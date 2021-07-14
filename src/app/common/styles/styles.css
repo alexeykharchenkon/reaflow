@@ -1,0 +1,45 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height:100vh;
+  background: #caedf8;
+}
+
+.topPageComponent {
+  display: flex;
+  border: 1px solid #eeeeee;
+  height: 100px;
+  padding: 20px;
+}
+
+.bottomPageComponent {
+  display: flex;
+  flex: 1 0 auto;
+  border: 1px solid #eeeeee;
+}
+
+.propertiesComponent {
+  display: flex;
+  width: 250px;
+  border: 1px solid #eeeeee;
+  padding: 20px;
+}
+
+.mainCanvasComponent {
+  display: flex;
+  flex-wrap: nowrap;
+  flex: 1 0 auto;
+  border: 1px solid #eeeeee;
+}
+
+.leftCanvas {
+  border: 1px solid #eeeeee;
+  width: 150px;
+  display: flex;
+  padding: 20px;
+}
+.middleCanvas {
+  display: flex;
+  flex: 1 0 auto;
+  padding: 20px;
+}

@@ -1,0 +1,35 @@
+.block {
+    color: white;
+    height: 50px;
+    width: 50px;
+    cursor: grab;
+    background: black;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    user-select: none;
+    flex: 1;
+  }
+  .dragger {
+    z-index: 999;
+    pointer-events: none;
+    user-select: none;
+    cursor: grabbing;
+    height: 70px;
+    width: 150px;
+  }
+  .dragInner {
+    pointer-events: none;
+    margin-left: 80px;
+    border-radius: 5px;
+    background: black;
+    border: solid 1px #00c5be;
+    height: 40px;
+    width: 40px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
