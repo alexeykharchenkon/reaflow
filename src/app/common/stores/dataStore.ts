@@ -1,69 +1,79 @@
 import { makeAutoObservable } from "mobx";
 import { addNodeAndEdge, EdgeData, NodeData, removeAndUpsertNodes } from "reaflow";
-import { Block } from "@common/models/Block";
-import { Types } from "@common/models/Types";
+import { Block } from "@models/Block";
 import { v4 as uuidv4 } from 'uuid';
+import { ActionTypes } from "@models/ActionTypes";
+import { dataService } from "@services/DataService";
 
 export class DataStore {
-    blocks: Block [] = [
-        {
-            id: uuidv4(),
-            type: Types[Types.Start],
-            name: "Start",
-        },
-        {
-            id: uuidv4(),
-            type: Types[Types.Decision],
-            name: "Decision",
-        },
-        {
-            id: uuidv4(),
-            type: Types[Types.Phase],
-            name: "Phase",
-        },
-    ];
+    blocks: Block [] = dataService.blocksInit();
     edges: EdgeData[] = [];
     nodes: NodeData[] = [];
+    selections: string[] = [];
     
     constructor(){
         makeAutoObservable(this);
     }
 
-    setNodesAndEdges = (text: string, enteredNode: any) => {
-        const id = uuidv4();
-        const result = addNodeAndEdge(
-            this.nodes,
-            this.edges,
-            {
-              id,
-              text
-            },
-            enteredNode as NodeData
-          );
+    setData = (block: string, enteredNode: any, from: NodeData, to: NodeData, actionType: ActionTypes) => {
+        console.log(from.data)
+        switch(actionType) {
+            case ActionTypes.SETNODESANDEDGES:
+                const id = uuidv4();
+                const result = addNodeAndEdge(
+                    this.nodes,
+                    this.edges,
+                    {
+                        id,
+                        text: block,
+                        data: block
+                    },
+                    enteredNode as NodeData
+                );
 
-          this.edges = result.edges;
-          this.nodes = result.nodes;
+                this.edges = result.edges;
+                this.nodes = result.nodes;
+                break;
+            case ActionTypes.SETEDGES:
+                const edgeId = uuidv4();
+                this.edges = [...this.edges,
+                    {
+                        id: edgeId,
+                        from: from.id,
+                        to: to.id,
+                        parent: to.parent
+                    }
+                ];
+                break;
+        }
     }
 
-    setEdges = (from: NodeData, to: NodeData) => {
-        const id = `${from.id}-${to.id}`;
-        this.edges = [...this.edges,
-          {
-            id,
-            from: from.id,
-            to: to.id,
-            parent: to.parent
-          }
-        ];
+    removeElement = (event: any, element: any, actionType: ActionTypes)  => {
+        switch(actionType) {
+            case ActionTypes.REMOVENODE:
+                const result = removeAndUpsertNodes(this.nodes, this.edges, element);
+                this.selections = [];
+                this.edges = result.edges;
+                this.nodes = result.nodes;
+                break;
+            case ActionTypes.REMOVEEDGE:
+                this.edges = this.edges.filter(e => e.id !== element.id);
+                this.selections = [];
+                break;
+        }
     }
 
-    removeNode = (event: any, node: NodeData) => {
-        const result = removeAndUpsertNodes(this.nodes, this.edges, node);
-        this.edges = result.edges;
-        this.nodes = result.nodes;
-    }
-
-    setNodes = (nodeData: NodeData[]) => {
-        this.nodes = nodeData;
+    onClick = (event: any, element: any, actionType: ActionTypes) => {
+        switch(actionType) {
+            case ActionTypes.ONCLICKEDGE:
+                this.selections = [element.id];
+                break;
+            case ActionTypes.ONCLICKNODE:
+                this.selections = [element.id];
+                break;
+            case ActionTypes.ONCLICKCANVAS:
+                this.selections = [];
+                break;
+        }
     }
 }

@@ -1,20 +1,22 @@
 import React, { useState, useRef } from 'react';
-import { useProximity, CanvasRef, Node, Canvas, hasLink, NodeData, EdgeData, addNodeAndEdge, removeNode } from 'reaflow';
+import { useProximity, CanvasRef, Node, Canvas, hasLink, NodeData, EdgeData, addNodeAndEdge, removeNode, Edge, removeEdge, MarkerArrow } from 'reaflow';
 import { motion, useDragControls} from 'framer-motion';
 import { observer } from 'mobx-react-lite';
-import { Block } from '@common/models/Block';
+import { Block } from '@models/Block';
+import { ActionTypes } from '@models/ActionTypes';
 
 interface MainCanvasProps {
   edges: EdgeData[];
   nodes: NodeData[];
   blocks: Block[];
-  setNodesAndEdges: any;
-  setEdges: any;
-  removeNode: any;
+  selections: string[];
+  onClick: any;
+  removeElement: any;
+  setData: any;
 }
 
-export const MainCanvasComponent = observer(({edges, nodes, blocks,
-  setNodesAndEdges, setEdges, removeNode} : MainCanvasProps ) => {
+export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
+  onClick, removeElement, setData} : MainCanvasProps ) => {
 
   const dragControls = useDragControls();
   const [enteredNode, setEnteredNode] = useState<NodeData | null>(null);
@@ -27,7 +29,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks,
   };
 
   const onDragEnd = (event: any) => {
-    if(droppable) setNodesAndEdges(activeDrag, enteredNode);
+    if(droppable) setData(activeDrag, enteredNode, "", "", ActionTypes.SETNODESANDEDGES);
 
     setDroppable(false);
     setActiveDrag(null);
@@ -45,18 +47,28 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks,
           </div>
           <div className="middleCanvas">
             <Canvas
-                maxWidth={500}
-                maxHeight={500}
+                className="canvas"
+                width={650}
+                height={650}
                 nodes={nodes}
                 edges={edges}
-                onNodeLink={(from: NodeData, to: NodeData) => setEdges(from, to)}
+                selections={selections}
+                onNodeLink={(from: NodeData, to: NodeData) => setData("", "", from, to, ActionTypes.SETEDGES)}
                 node={
                   <Node
                     onEnter={(event, node) => setEnteredNode(node)}
                     onLeave={(event, node) => setEnteredNode(null)}
-                    onRemove={(event, node) => removeNode(event, node)}
+                    onRemove={(event, node) => removeElement(event, node, ActionTypes.REMOVENODE)}
+                    onClick={(event, node) => onClick(event, node, ActionTypes.ONCLICKNODE)}
                   />
                 }
+                edge={
+                  <Edge
+                    onClick={(event, edge) => onClick(event, edge, ActionTypes.ONCLICKEDGE)}
+                    onRemove={(event, edge) => removeElement(event, edge, ActionTypes.REMOVEEDGE)}
+                  />
+                }
+                onCanvasClick={(event) => onClick(event, "", ActionTypes.ONCLICKCANVAS)}
                 onMouseEnter={() => setDroppable(true)}
                 onMouseLeave={() => setDroppable(false)}
             />

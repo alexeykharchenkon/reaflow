@@ -42,6 +42,18 @@
 }
 .middleCanvas {
   display: flex;
+  flex-direction: column;
   flex: 1 0 auto;
   padding: 20px;
-}
+  }
+
+.canvas {
+    background:
+    repeating-linear-gradient(
+      transparent,transparent 20px, #86dffa 22px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,transparent 20px, #86dffa 22px
+    );
+  }

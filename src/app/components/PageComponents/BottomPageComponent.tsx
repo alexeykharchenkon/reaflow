@@ -11,10 +11,11 @@ export const BottomPageComponent = observer(() => {
           <MainCanvasComponent
             edges={dataStore.edges}
             nodes={dataStore.nodes}
-            setNodesAndEdges={dataStore.setNodesAndEdges}
-            setEdges={dataStore.setEdges}
-            removeNode={dataStore.removeNode}
             blocks={dataStore.blocks}
+            selections={dataStore.selections}
+            onClick={dataStore.onClick}
+            removeElement={dataStore.removeElement}
+            setData={dataStore.setData} 
           />
           <PropertiesComponent/>
       </div>
