@@ -32,3 +32,17 @@
     align-items: center;
     justify-content: center;
   }
+  .canvas {
+  background:
+   repeating-linear-gradient(
+     transparent,transparent 20px, #86dffa 22px
+   ),
+   repeating-linear-gradient(
+     90deg,
+     transparent,transparent 20px, #86dffa 22px
+   );
+ }
+
+ .edge {
+
+ }

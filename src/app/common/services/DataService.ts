@@ -34,7 +34,7 @@ class DataService {
             nodeParams: {
                 inputsCount: '0',
                 outputsCount: '0',
-                maxInputsCount: '2',
+                maxInputsCount: '5',
                 maxOutputsCount: '1'
             }
         },

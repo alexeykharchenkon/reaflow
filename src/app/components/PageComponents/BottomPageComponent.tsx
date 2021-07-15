@@ -17,7 +17,11 @@ export const BottomPageComponent = observer(() => {
             removeElement={dataStore.removeElement}
             setData={dataStore.setData} 
           />
-          <PropertiesComponent/>
+          <PropertiesComponent
+            element={dataStore.activeElement}
+            onPropertiesChange={dataStore.onPropertiesChange}
+            saveProperties={dataStore.saveProperties}
+          />
       </div>
     );
   });
