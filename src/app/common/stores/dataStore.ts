@@ -4,6 +4,7 @@ import { Block } from "@models/Block";
 import { v4 as uuidv4 } from 'uuid';
 import { ActionTypes } from "@models/ActionTypes";
 import { dataService } from "@services/DataService";
+import { PropertyModes } from "@models/PropertyModes";
 
 export class DataStore {
     blocks: Block [] = dataService.blocksInit();
@@ -11,13 +12,18 @@ export class DataStore {
     nodes: NodeData[] = [];
     selections: string[] = [];
 
+    propertyModes: PropertyModes = {
+        nodeMode: false,
+        edgeMode: false,
+    }
+
     activeElement: any = null;
     
     constructor(){
         makeAutoObservable(this);
     }
 
-    setData = (block: Block, enteredNode: any, from: NodeData, to: NodeData, actionType: ActionTypes) => {
+    setData = (block: Block, from: NodeData, to: NodeData, actionType: ActionTypes) => {
         switch(actionType) {
             case ActionTypes.SETNODESANDEDGES:
                 const id = uuidv4();
@@ -26,10 +32,10 @@ export class DataStore {
                     this.edges,
                     {
                         id,
-                        text: block.name,
-                        data: {...block.nodeParams}
+                        data: {...block.nodeParams},
+                        width: 100,
+                        height: 100,
                     },
-                    enteredNode as NodeData
                 );
 
                 this.edges = result.edges;
@@ -45,6 +51,7 @@ export class DataStore {
                             from: from.id,
                             to: to.id,
                             parent: to.parent,
+                            text: "Some Text"
                         }
                     ];
                     this.nodes.forEach(n => {
@@ -59,9 +66,6 @@ export class DataStore {
     removeElement = (event: any, element: any, actionType: ActionTypes)  => {
         switch(actionType) {
             case ActionTypes.REMOVENODE:
-              // const result = removeAndUpsertNodes(this.nodes, this.edges, element);
-              // this.edges = result.edges;
-              //  this.nodes = result.nodes;
                 this.selections = [];
                 this.edges.forEach(e=> {
                     if(e.from === element.id){
@@ -96,28 +100,47 @@ export class DataStore {
         switch(actionType) {
             case ActionTypes.ONCLICKEDGE:
                 this.selections = [element.id];
-               // this.activeElement = element as EdgeData;
+                this.activeElement = element as EdgeData;
+                this.propertyModes.nodeMode = false;
+                this.propertyModes.edgeMode = true;
                 break;
             case ActionTypes.ONCLICKNODE:
                 this.selections = [element.id];
                 this.activeElement = element as NodeData;
+                this.propertyModes.nodeMode = true;
+                this.propertyModes.edgeMode = false;
                 break;
             case ActionTypes.ONCLICKCANVAS:
                 this.selections = [];
+                this.propertyModes.nodeMode = false;
+                this.propertyModes.edgeMode = false;
                 break;
         }
     }
 
     onPropertiesChange = (event: any) => {
         const {name, value} = event.target;
-        this.activeElement = {...this.activeElement, [name] : value}
+        if(this.propertyModes.nodeMode){
+        this.activeElement.data = {...this.activeElement.data, [name] : value};
+        }else if(this.propertyModes.edgeMode) {
+            console.log("sdfsdf")
+            this.activeElement = {...this.activeElement, [name] : value};
+        }
+        this.activeElement = {...this.activeElement};
     }
 
     saveProperties = () => {
-        this.nodes.filter(n=> n.id === this.activeElement.id)
-        .forEach(n=> {
-            n.text = this.activeElement.text;
-        });
+        if(this.propertyModes.nodeMode){
+            this.nodes.filter(n=> n.id === this.activeElement.id)
+            .forEach(n=> {
+                n.data.text = this.activeElement.data.text;
+            });
+        }else if(this.propertyModes.edgeMode) {
+            this.edges.filter(e=> e.id === this.activeElement.id)
+            .forEach(e=> {
+                e.text = this.activeElement.text;
+            }); 
+        }
 
         this.nodes = this.nodes.filter(n=> n.id !== "");
     }

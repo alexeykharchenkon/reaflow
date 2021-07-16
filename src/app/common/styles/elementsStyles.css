@@ -1,17 +1,4 @@
-.block {
-    color: white;
-    height: 100px;
-    width: 100px;
-    cursor: grab;
-    background: black;
-    margin: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    user-select: none;
-  }
-  .dragger {
+ .dragger {
     z-index: 999;
     pointer-events: none;
     user-select: none;
@@ -43,6 +30,52 @@
    );
  }
 
- .edge {
-
+ .node {
+    opacity: 0;
  }
+
+ .port {
+  
+ }
+
+ .block {
+  cursor: grab;
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  user-select: none;
+ }
+
+ .startElement {
+   border: 1px solid grey;
+   border-radius: 50%;
+   background: rgb(97, 248, 97);
+   height: 100px;
+   width: 100px;
+ }
+
+ .desicionElement {
+  border: 1px solid grey;
+  background: rgb(221, 221, 122);
+  transform: translateX(50px) rotate(45deg);
+  height: 80px;
+  width: 80px;
+  }
+
+  .desicionBlockElement {
+    border: 1px solid grey;
+    background: rgb(221, 221, 122);
+    transform: translateX(0px) rotate(45deg);
+    height: 100px;
+    width: 100px;
+    }
+
+ .phaseElement {
+  border: 1px solid grey;
+  background: rgb(247, 247, 181);
+  height: 100px;
+  width: 100px;
+ }
+

@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import { MainCanvasComponent } from "./MainCanvasComponent";
-import { PropertiesComponent } from "./PropertiesComponent";
+import { PropertiesComponent } from "../PropertiesComponent/PropertiesComponent";
 import { useStore } from "@stores/rootStore";
 
 export const BottomPageComponent = observer(() => {
@@ -21,6 +21,7 @@ export const BottomPageComponent = observer(() => {
             element={dataStore.activeElement}
             onPropertiesChange={dataStore.onPropertiesChange}
             saveProperties={dataStore.saveProperties}
+            propertyModes={dataStore.propertyModes}
           />
       </div>
     );

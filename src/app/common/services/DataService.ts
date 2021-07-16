@@ -7,36 +7,45 @@ class DataService {
         const blocks = [
         {
             id: uuidv4(),
-            type: Types[Types.Start],
             name: "Start",
             nodeParams: {
                 inputsCount: '0',
                 outputsCount: '0',
                 maxInputsCount: '0',
-                maxOutputsCount: '1'
-            }
+                maxOutputsCount: '1',
+                type: Types[Types.Start],
+                className: "startElement",
+                text: "Start",
+            },
+            className: "startElement"
         },
         {
             id: uuidv4(),
-            type: Types[Types.Decision],
             name: "Decision",
             nodeParams: {
                 inputsCount: '0',
                 outputsCount: '0',
                 maxInputsCount: '1',
-                maxOutputsCount: '2'
-            }
+                maxOutputsCount: '2',
+                type: Types[Types.Decision],
+                className: "desicionElement",
+                text: "Decision",
+            },
+            className: "desicionBlockElement"
         },
         {
             id: uuidv4(),
-            type: Types[Types.Phase],
             name: "Phase",
             nodeParams: {
                 inputsCount: '0',
                 outputsCount: '0',
                 maxInputsCount: '5',
-                maxOutputsCount: '1'
-            }
+                maxOutputsCount: '1',
+                type: Types[Types.Phase],
+                className: "phaseElement",
+                text: "Phase",
+            },
+            className: "phaseElement"
         },
     ];
 

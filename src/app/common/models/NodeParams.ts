@@ -3,4 +3,7 @@ export interface NodeParams {
     outputsCount: string;
     maxInputsCount: string;
     maxOutputsCount: string;
+    type: string;
+    className: string;
+    text: string;
 }
