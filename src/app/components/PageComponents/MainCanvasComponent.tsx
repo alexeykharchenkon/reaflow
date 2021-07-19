@@ -19,7 +19,7 @@ interface MainCanvasProps {
 export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
   onClick, removeElement, setData} : MainCanvasProps ) => {
   const canvasRef = useRef<CanvasRef | null>(null);
-  const [zoom, setZoom] = useState<number>(70);
+  const [zoom, setZoom] = useState<number>(50);
   const dragControls = useDragControls();
   const [activeDrag, setActiveDrag] = useState<Block | null>(null);
   const [droppable, setDroppable] = useState<boolean>(false);
@@ -99,12 +99,14 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
              
                 layoutOptions={{'elk.hierarchyHandling':'INCLUDE_CHILDREN'}}
                 className="canvas"
-                maxZoom={2.5}
-                minZoom={-1.5}
+                maxZoom={1.5}
+                minZoom={-5.5}
                 zoom={zoom/100}
                 ref={canvasRef}
-                width={800}
+                center={true}
+                fit={true}
                 height={800}
+                width={document.documentElement.clientWidth-400}
                 nodes={nodes}
                 edges={edges}
                 selections={selections}
