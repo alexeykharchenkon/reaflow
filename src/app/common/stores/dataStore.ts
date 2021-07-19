@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ActionTypes } from "@models/ActionTypes";
 import { dataService } from "@services/DataService";
 import { PropertyModes } from "@models/PropertyModes";
+import { Types } from "@models/Types";
 
 export class DataStore {
     blocks: Block [] = dataService.blocksInit();
@@ -27,18 +28,31 @@ export class DataStore {
         switch(actionType) {
             case ActionTypes.SETNODESANDEDGES:
                 const id = uuidv4();
-
-                const result = addNodeAndEdge(
-                    this.nodes,
-                    this.edges,
-                    {
-                        id,
-                        data: {...block.nodeParams},
-                        width: +block.width,
-                        height: +block.height,
-                        parent: enteredNode?.id,
-                    },
-                );
+                var result;
+                if(enteredNode?.data.type === Types[Types.SubWorkflow]) {
+                    result = addNodeAndEdge(
+                        this.nodes,
+                        this.edges,
+                        {
+                            id,
+                            data: {...block.nodeParams},
+                            width: +block.width,
+                            height: +block.height,
+                            parent: enteredNode?.id,
+                        },
+                    );
+                }else {
+                    result = addNodeAndEdge(
+                        this.nodes,
+                        this.edges,
+                        {
+                            id,
+                            data: {...block.nodeParams},
+                            width: +block.width,
+                            height: +block.height,
+                        },
+                    );
+                }
 
                 this.edges = result.edges;
                 this.nodes = result.nodes;

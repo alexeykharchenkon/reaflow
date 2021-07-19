@@ -3,4 +3,5 @@ export enum Types {
     Decision,
     Start,
     SubWorkflow,
+    End,
 }

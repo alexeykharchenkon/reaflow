@@ -17,9 +17,9 @@ class DataService {
                 className: "startElement",
                 text: "Start",
             },
-            className: "startElement",
-            width: "100",
-            height: "100",
+            className: "startBlockElement",
+            width: "50",
+            height: "50",
         },
         {
             id: uuidv4(),
@@ -34,8 +34,8 @@ class DataService {
                 text: "Decision",
             },
             className: "desicionBlockElement",
-            width: "100",
-            height: "100",
+            width: "70",
+            height: "70",
         },
         {
             id: uuidv4(),
@@ -49,9 +49,9 @@ class DataService {
                 className: "phaseElement",
                 text: "Phase",
             },
-            className: "phaseElement",
-            width: "100",
-            height: "100",
+            className: "phaseBlockElement",
+            width: "70",
+            height: "70",
         },
         {
             id: uuidv4(),
@@ -66,8 +66,24 @@ class DataService {
                 text: "Sub Workflow",
             },
             className: "subWorkflowBlockElement",
-            width: "300",
-            height: "300",
+            width: "250",
+            height: "250",
+        },
+        {
+            id: uuidv4(),
+            name: "End",
+            nodeParams: {
+                inputsCount: '0',
+                outputsCount: '0',
+                maxInputsCount: '5',
+                maxOutputsCount: '0',
+                type: Types[Types.End],
+                className: "endElement",
+                text: "End",
+            },
+            className: "endBlockElement",
+            width: "50",
+            height: "50",
         }
     ];
 

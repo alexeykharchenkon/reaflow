@@ -1,9 +1,12 @@
+import { Types } from "@models/Types"
+
 
 interface ElementsProps {
   element: any;
 }
 
 export const ElementsComponent = ({element} : ElementsProps) => {
+  console.log(element)
     return (
       <foreignObject
         pointerEvents={"none"}
@@ -13,8 +16,15 @@ export const ElementsComponent = ({element} : ElementsProps) => {
         x={0} 
         y={0}
         >
-            <div style={{ padding: 10, textAlign: 'center' }}>
+          {element?.node.data?.type.toString() !== Types[Types.Decision] &&
+            <div className="element">
                 <h3>{element.node.data.text}</h3>
             </div>
+          }
+          {element?.node.data?.type.toString() === Types[Types.Decision] &&
+            <div className="desicionElementText">
+                <h3>{element.node.data.text}</h3>
+            </div>
+          }
        </foreignObject>
     )}

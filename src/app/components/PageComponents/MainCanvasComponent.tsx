@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity } from 'reaflow';
+import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity, MarkerArrow } from 'reaflow';
 import { motion, useDragControls} from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import { Block } from '@models/Block';
@@ -65,7 +65,6 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
       setDroppable(matchNode !== null);
     }
   });
-  
     return (
       <div className="mainCanvasComponent">
           <div className="leftCanvas">
@@ -86,7 +85,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 <div>
                   <input 
                     type="range" 
-                    min="1" 
+                    min="0.01" 
                     max="100" 
                     value={zoom} 
                     onChange={onZoomChange}
@@ -96,11 +95,10 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
           </div>
           <div className="middleCanvas">
             <Canvas
-             
                 layoutOptions={{'elk.hierarchyHandling':'INCLUDE_CHILDREN'}}
                 className="canvas"
-                maxZoom={1.5}
-                minZoom={-5.5}
+                maxZoom={1}
+                minZoom={0}
                 zoom={zoom/100}
                 ref={canvasRef}
                 center={true}
@@ -130,6 +128,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                     className="edge"
                   />
                 }
+                arrow={<MarkerArrow style={{ fill: 'blue' }} />}
                 onCanvasClick={(event) => onClick(event, "", ActionTypes.ONCLICKCANVAS)}
                 onMouseEnter={() => setDroppable(true)}
                 onMouseLeave={() => setDroppable(false)}
