@@ -47,19 +47,17 @@
   justify-content: center;
   padding: 5px;
   user-select: none;
+  box-shadow: -9px 11px 7px 4px rgba(34, 60, 80, 0.34);
  }
 
  .block:hover {
   background: dodgerblue;
+  box-shadow: -9px 11px 7px -5px rgba(34, 60, 80, 0.34);
  }
 
  .element {
   padding: 8px;
   text-align: 'center';
- }
-
- .element:hover{
-  border:floralwhite;
  }
 
  .startElement {
@@ -70,6 +68,7 @@
    width: 50px;
    font-size: 10px;
    text-align: center;
+   box-shadow: -3px 4px 8px 0px rgba(34, 60, 80, 0.2);
  }
 
  .startBlockElement {
