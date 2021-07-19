@@ -85,7 +85,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 <div>
                   <input 
                     type="range" 
-                    min="0.01" 
+                    min="1" 
                     max="100" 
                     value={zoom} 
                     onChange={onZoomChange}
