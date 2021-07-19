@@ -49,9 +49,17 @@
   user-select: none;
  }
 
+ .block:hover {
+  background: dodgerblue;
+ }
+
  .element {
-  padding: 10px;
-  text-align: 'center'; 
+  padding: 8px;
+  text-align: 'center';
+ }
+
+ .element:hover{
+  border:floralwhite;
  }
 
  .startElement {
@@ -61,14 +69,15 @@
    height: 50px;
    width: 50px;
    font-size: 10px;
+   text-align: center;
  }
 
  .startBlockElement {
   border: 1px solid grey;
   border-radius: 50%;
   background: rgb(97, 248, 97);
-  height: 100px;
-  width: 100px;
+  height: 90px;
+  width: 90px;
 }
 
 .endElement {
@@ -78,14 +87,15 @@
   height: 50px;
   width: 50px;
   font-size: 10px;
+  text-align: center;
 }
 
 .endBlockElement {
  border: 1px solid grey;
  border-radius: 50%;
  background: rgb(208, 108, 255);
- height: 100px;
- width: 100px;
+ height: 90px;
+ width: 90px;
 }
 
  .desicionElement {
@@ -95,32 +105,36 @@
   height: 55px;
   width: 55px;
   font-size: 7px;
+  padding: 10px;
+  text-align: center;
   }
 
   .desicionElementText {
     transform: rotate(-45deg);
-    }
+}
 
   .desicionBlockElement {
     border: 1px solid grey;
     background: rgb(221, 221, 122);
     transform: translateX(0px) rotate(45deg);
-    height: 100px;
-    width: 100px;
-    }
+    height:90px;
+    width:90px;
+}
 
  .phaseElement {
-  border: 1px solid grey;
-  background: rgb(247, 247, 181);
-  height: 70px;
-  width: 70px;
-  font-size: 7px;
+    border: 1px solid grey;
+    background: rgb(247, 247, 181);
+    height: 70px;
+    width: 70px;
+    font-size: 7px;
+    padding: 10px;
+    text-align: center;
  }
  .phaseBlockElement {
   border: 1px solid grey;
   background: rgb(247, 247, 181);
-  height: 100px;
-  width: 100px;
+  height: 90px;
+  width: 90px;
  }
 
  .subWorkflowElement {
@@ -128,13 +142,16 @@
   background: rgb(102, 102, 73);
   font-size: 9px;
   width: 250px;
+  padding: 0px;
+  text-align: center;
  }
 
  .subWorkflowBlockElement {
   border: 1px solid grey;
   background: rgb(102, 102, 73);
-  height: 100px;
-  width: 100px;
+  height: 90px;
+  width: 90px;
+  text-align: center;
 }
 
 

@@ -160,4 +160,9 @@ export class DataStore {
 
         this.nodes = this.nodes.filter(n=> n.id !== "");
     }
+
+    saveDiagram = () => {
+        localStorage.setItem("nodes", JSON.stringify(this.nodes));
+        localStorage.setItem("edges", JSON.stringify(this.edges));
+    }
 }
