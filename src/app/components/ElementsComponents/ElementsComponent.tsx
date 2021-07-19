@@ -6,7 +6,6 @@ interface ElementsProps {
 }
 
 export const ElementsComponent = ({element} : ElementsProps) => {
-  console.log(element)
     return (
       <foreignObject
         pointerEvents={"none"}

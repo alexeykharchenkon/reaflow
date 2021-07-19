@@ -125,14 +125,14 @@
 
  .subWorkflowElement {
   border: 1px solid grey;
-  background: rgb(175, 175, 173);
-  font-size: 7px;
+  background: rgb(102, 102, 73);
+  font-size: 9px;
   width: 250px;
  }
 
  .subWorkflowBlockElement {
   border: 1px solid grey;
-  background: rgb(175, 175, 173);
+  background: rgb(102, 102, 73);
   height: 100px;
   width: 100px;
 }
