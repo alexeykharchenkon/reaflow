@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { addNodeAndEdge, EdgeData, NodeData, removeAndUpsertNodes } from "reaflow";
+import { addNodeAndEdge, EdgeData, NodeData } from "reaflow";
 import { Block } from "@models/Block";
 import { v4 as uuidv4 } from 'uuid';
 import { ActionTypes } from "@models/ActionTypes";
@@ -23,18 +23,20 @@ export class DataStore {
         makeAutoObservable(this);
     }
 
-    setData = (block: Block, from: NodeData, to: NodeData, actionType: ActionTypes) => {
+    setData = (block: Block, enteredNode: NodeData, from: NodeData, to: NodeData, actionType: ActionTypes) => {
         switch(actionType) {
             case ActionTypes.SETNODESANDEDGES:
                 const id = uuidv4();
+
                 const result = addNodeAndEdge(
                     this.nodes,
                     this.edges,
                     {
                         id,
                         data: {...block.nodeParams},
-                        width: 100,
-                        height: 100,
+                        width: +block.width,
+                        height: +block.height,
+                        parent: enteredNode?.id,
                     },
                 );
 
@@ -114,6 +116,7 @@ export class DataStore {
                 this.selections = [];
                 this.propertyModes.nodeMode = false;
                 this.propertyModes.edgeMode = false;
+                this.activeElement = null;
                 break;
         }
     }
@@ -123,7 +126,6 @@ export class DataStore {
         if(this.propertyModes.nodeMode){
         this.activeElement.data = {...this.activeElement.data, [name] : value};
         }else if(this.propertyModes.edgeMode) {
-            console.log("sdfsdf")
             this.activeElement = {...this.activeElement, [name] : value};
         }
         this.activeElement = {...this.activeElement};

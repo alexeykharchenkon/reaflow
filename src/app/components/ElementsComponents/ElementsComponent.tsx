@@ -1,6 +1,3 @@
-import { Types } from '@models/Types';
-import { ActionTypes } from '@models/ActionTypes';
-import { NodeData} from 'reaflow';
 
 interface ElementsProps {
   element: any;

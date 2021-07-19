@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   height:100vh;
-  background: #caedf8;
+  background: #0ba3d1;
+  box-sizing: border-box;
 }
 
 .topPageComponent {
@@ -15,6 +16,7 @@
 .bottomPageComponent {
   display: flex;
   flex: 1 0 auto;
+  justify-content: space-between;
   border: 1px solid #eeeeee;
 }
 
@@ -25,6 +27,7 @@
   border: 1px solid #eeeeee;
   padding: 20px;
   align-items: center;
+  background: #0ba3d1;
 }
 
 .saveProperties {
@@ -34,9 +37,9 @@
 
 .mainCanvasComponent {
   display: flex;
-  flex-wrap: nowrap;
-  flex: 1 0 auto;
   border: 1px solid #eeeeee;
+  flex: 1 0 auto;
+  background: #0ba3d1;
 }
 
 .leftCanvas {
@@ -45,7 +48,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
 }
 
 .blocks_leftCanvas {
@@ -54,7 +57,11 @@
   align-items: center;
 }
 
-.zoom_leftCanvas {}
+.zoom_leftCanvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .middleCanvas {
   display: flex;

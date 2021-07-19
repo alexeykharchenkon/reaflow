@@ -1,5 +1,4 @@
 import React from "react";
-import { EdgeData, NodeData } from "reaflow";
 import { PropertyModes } from "@models/PropertyModes";
 import { PropertiesNodeComponent } from "./PropertiesNodeComponent";
 import { PropertiesEdgeComponent } from "./PropertiesEdgeComponent";

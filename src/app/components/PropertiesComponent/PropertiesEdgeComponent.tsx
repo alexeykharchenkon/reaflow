@@ -10,7 +10,7 @@ export const PropertiesEdgeComponent = ({element, onPropertiesChange} : Properti
   return (
         <div>
             <label>
-              Lable:
+              Label:
               <input 
                 type="text" 
                 name="text" 

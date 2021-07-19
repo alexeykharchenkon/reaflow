@@ -20,22 +20,22 @@
     justify-content: center;
   }
   .canvas {
-  background:
-   repeating-linear-gradient(
-     transparent,transparent 20px, #86dffa 22px
-   ),
-   repeating-linear-gradient(
-     90deg,
-     transparent,transparent 20px, #86dffa 22px
-   );
+    background:
+    repeating-linear-gradient(
+      transparent,transparent 20px, #86dffa 22px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,transparent 20px, #86dffa 22px
+    );
  }
 
  .node {
     opacity: 0;
  }
 
- .port {
-  
+ .edge {
+  font-size: large;
  }
 
  .block {
@@ -78,4 +78,19 @@
   height: 100px;
   width: 100px;
  }
+
+ .subWorkflowElement {
+  border: 1px solid grey;
+  background: rgb(175, 175, 173);
+
+  width: 300px;
+ }
+
+ .subWorkflowBlockElement {
+  border: 1px solid grey;
+  background: rgb(175, 175, 173);
+  height: 100px;
+  width: 100px;
+}
+
 

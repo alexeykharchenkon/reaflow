@@ -5,4 +5,6 @@ export interface Block {
     name: string;
     nodeParams: NodeParams;
     className: string;
+    width: string;
+    height: string;
 }
