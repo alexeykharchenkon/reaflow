@@ -119,19 +119,27 @@ export class DataStore {
                 this.activeElement = element as EdgeData;
                 this.propertyModes.nodeMode = false;
                 this.propertyModes.edgeMode = true;
+                this.nodes.forEach(n=> n.data.checked = false);
                 break;
             case ActionTypes.ONCLICKNODE:
                 this.selections = [element.id];
                 this.activeElement = element as NodeData;
                 this.propertyModes.nodeMode = true;
                 this.propertyModes.edgeMode = false;
+                this.nodes.forEach(n=> { 
+                    if(n.id===element.id){n.data.checked = true;
+                    }else{n.data.checked = false;} 
+                });
                 break;
             case ActionTypes.ONCLICKCANVAS:
                 this.selections = [];
                 this.propertyModes.nodeMode = false;
                 this.propertyModes.edgeMode = false;
                 this.activeElement = null;
+                this.nodes.forEach(n=> n.data.checked = false);
                 break;
+            case ActionTypes.ONCLICKFOROBJ:
+                console.log("ForObj");
         }
     }
 

@@ -5,5 +5,6 @@ export interface NodeParams {
     maxOutputsCount: string;
     type: string;
     className: string;
+    checked: boolean;
     text: string;
 }

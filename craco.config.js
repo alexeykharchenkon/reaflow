@@ -10,6 +10,7 @@ module.exports = {
             '@services': resolvePath('./src/app/common/services'),
             '@stores': resolvePath('./src/app/common/stores'),
             '@common': resolvePath('./src/app/common'),
+            '@styles': resolvePath('./src/app/common/styles'),
         }
     },
   

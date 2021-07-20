@@ -1,6 +1,7 @@
 import React from 'react';
-import "./common/styles/styles.css";
-import "./common/styles/elementsStyles.css";
+import "@styles/styles.css";
+import "@styles/elementsStyles.css";
+import "@styles/toolBoxStyles.css";
 import { BottomPageComponent } from './components/PageComponents/BottomPageComponent';
 import { TopPageComponent } from './components/PageComponents/TopPageComponent';
 

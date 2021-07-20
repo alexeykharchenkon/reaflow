@@ -7,6 +7,7 @@
             "@stores/*": ["app/common/stores/*"],
             "@services/*": ["app/common/services/*"],
             "@models/*": ["app/common/models/*"],
+            "@styles/*": ["app/common/styles/*"],
     }
 }
 }

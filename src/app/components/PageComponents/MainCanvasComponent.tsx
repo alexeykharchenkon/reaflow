@@ -65,6 +65,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
       setDroppable(matchNode !== null);
     }
   });
+
     return (
       <div className="mainCanvasComponent">
           <div className="leftCanvas">
@@ -97,9 +98,9 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
             <Canvas
                 layoutOptions={{'elk.hierarchyHandling':'INCLUDE_CHILDREN'}}
                 className="canvas"
-                maxZoom={1}
+                maxZoom={100}
                 minZoom={0}
-                zoom={zoom/100}
+                zoom={zoom}
                 ref={canvasRef}
                 center={true}
                 fit={true}
@@ -117,7 +118,9 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                     onRemove={(event, node) => removeElement(event, node, ActionTypes.REMOVENODE)}
                     onClick={(event, node) => onClick(event, node, ActionTypes.ONCLICKNODE)}
                   >
-                      {(node) => <ElementsComponent element={node}/>}
+                      {(node) => <ElementsComponent 
+                      onClick={onClick}
+                      element={node}/>}
                     </Node>
                   ))
                 }
@@ -133,6 +136,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 onMouseEnter={() => setDroppable(true)}
                 onMouseLeave={() => setDroppable(false)}
                 onZoomChange={z => setZoom(z)}
+                onLayoutChange={layout => console.log('Layout', layout)}
             />
             <motion.div
               drag

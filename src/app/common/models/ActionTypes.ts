@@ -6,4 +6,5 @@ export enum ActionTypes {
     ONCLICKCANVAS,
     SETNODESANDEDGES,
     SETEDGES,
+    ONCLICKFOROBJ,
 }

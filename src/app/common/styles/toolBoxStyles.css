@@ -1,0 +1,36 @@
+.block {
+    cursor: grab;
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    user-select: none;
+    box-shadow: -9px 11px 7px 1px rgba(34, 60, 80, 0.34);
+    border: 1px solid grey;
+    height: 90px;
+    width: 90px;
+    text-align: center;
+}
+.block:hover {
+    background: dodgerblue;
+    box-shadow: -9px 11px 7px -5px rgba(34, 60, 80, 0.34);
+}
+.desicionBlockElement {
+    background: rgb(221, 221, 122);
+    transform: translateX(0px) rotate(45deg);
+}
+.startBlockElement {
+    border-radius: 50%;
+    background: rgb(97, 248, 97);
+}
+.endBlockElement {
+   border-radius: 50%;
+   background: rgb(208, 108, 255);
+}
+.phaseBlockElement {
+    background: rgb(247, 247, 181);
+}
+.subWorkflowBlockElement {
+    background: rgb(145, 145, 105);
+}
