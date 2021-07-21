@@ -70,17 +70,17 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
 
     return (
       <div className="mainCanvasComponent">
-          <div className="leftCanvas">
-          <div className="zoom_leftCanvas">
-                <h3>Zoom & Pan</h3>
-                <div className="zoom_leftCanvas_Zoom">
-                  <IconButton onClick={() => onZoomChange(ActionTypes.ZOOMOUT)}>
-                    <ZoomOutIcon />
-                  </IconButton>
-                  <IconButton onClick={() => onZoomChange(ActionTypes.ZOOMIN)}>
-                    <ZoomInIcon />
-                  </IconButton>
-                </div>
+        <div className="leftCanvas">
+           <div className="zoom_leftCanvas">
+            <h3>Zoom & Pan</h3>
+            <div className="zoom_leftCanvas_Zoom">
+              <IconButton onClick={() => onZoomChange(ActionTypes.ZOOMOUT)}>
+                <ZoomOutIcon />
+              </IconButton>
+              <IconButton onClick={() => onZoomChange(ActionTypes.ZOOMIN)}>
+                <ZoomInIcon />
+              </IconButton>
+            </div>
             </div>
             <div className="blocks_leftCanvas">
               <h3>ToolBox</h3>

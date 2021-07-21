@@ -22,6 +22,9 @@ export const BottomPageComponent = observer(() => {
             onPropertiesChange={dataStore.onPropertiesChange}
             saveProperties={dataStore.saveProperties}
             propertyModes={dataStore.propertyModes}
+            nodes={dataStore.nodes}
+            edges={dataStore.edges}
+            selectNoYes={dataStore.selectNoYes}
           />
       </div>
     );

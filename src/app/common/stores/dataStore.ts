@@ -6,12 +6,18 @@ import { ActionTypes } from "@models/ActionTypes";
 import { dataService } from "@services/DataService";
 import { PropertyModes } from "@models/PropertyModes";
 import { Types } from "@models/Types";
+import { SelectNoYes } from "@models/SelectNoYes";
 
 export class DataStore {
     blocks: Block [] = dataService.blocksInit();
     edges: EdgeData[] = [];
     nodes: NodeData[] = [];
     selections: string[] = [];
+
+    selectNoYes: SelectNoYes = {
+        onYes: "",
+        onNo: "",
+    }
 
     propertyModes: PropertyModes = {
         nodeMode: false,
@@ -27,44 +33,14 @@ export class DataStore {
     setData = (block: Block, enteredNode: NodeData, from: NodeData, to: NodeData, actionType: ActionTypes) => {
         switch(actionType) {
             case ActionTypes.SETNODESANDEDGES:
-                const id = uuidv4();
                 var result;
                 if(enteredNode?.data.type === Types[Types.SubWorkflow]) {
-                    result = addNodeAndEdge(
-                        this.nodes,
-                        this.edges,
-                        {
-                            id,
-                            data: {...block.nodeParams},
-                            width: +block.width,
-                            height: +block.height,
-                            parent: enteredNode?.id,
-                        },
-                    );
+                    result = this.addNodeAndEdgeResult(block, enteredNode?.id);
                 }else {
                     if(enteredNode?.parent) {
-                        result = addNodeAndEdge(
-                            this.nodes,
-                            this.edges,
-                            {
-                                id,
-                                data: {...block.nodeParams},
-                                width: +block.width,
-                                height: +block.height,
-                                parent: enteredNode?.parent,
-                            },
-                        );
+                        result = this.addNodeAndEdgeResult(block, enteredNode?.parent);
                     }else{
-                        result = addNodeAndEdge(
-                            this.nodes,
-                            this.edges,
-                            {
-                                id,
-                                data: {...block.nodeParams},
-                                width: +block.width,
-                                height: +block.height,
-                            },
-                        );
+                        result = this.addNodeAndEdgeResult(block, "");
                     }
                 }
 
@@ -72,26 +48,26 @@ export class DataStore {
                 this.nodes = result.nodes;
                 break;
             case ActionTypes.SETEDGES:
-                if(+from.data.outputsCount < +from.data.maxOutputsCount &&
-                    +to.data.inputsCount < +to.data.maxInputsCount){
-                    const edgeId = uuidv4();
-                    this.edges = [...this.edges,
-                        {
-                            id: edgeId,
-                            from: from.id,
-                            to: to.id,
-                            parent: to.parent,
-                            text: "Some Text"
-                        }
-                    ];
-                    this.nodes.forEach(n => {
-                        if(n.id === to.id) (+n.data.inputsCount++).toString();
-                        if(n.id === from.id) (+n.data.outputsCount++).toString();
-                    });
-                }
+                if(from.data.type !== Types[Types.Decision])
+                    this.setEdges(from.id, to.id, "");   
                 break;
         }
     }
+
+    addNodeAndEdgeResult = (block: Block, parentId: string) : any => {
+        const id = uuidv4();
+        return addNodeAndEdge(
+            this.nodes,
+            this.edges,
+            {
+                id,
+                data: {...block.nodeParams},
+                width: +block.width,
+                height: +block.height,
+                parent: parentId,
+            },
+        );
+    } 
 
     removeElement = (event: any, element: any, actionType: ActionTypes)  => {
         switch(actionType) {
@@ -113,17 +89,21 @@ export class DataStore {
                 this.edges = this.edges.filter(e => e.to !== element.id);
                 break;
             case ActionTypes.REMOVEEDGE:
-                this.nodes.forEach(n=> {
-                    if(n.id === element.from){
-                        (+n.data.outputsCount--).toString();
-                    }else if(n.id === element.to){
-                        (+n.data.inputsCount--).toString();
-                    }
-                });
-                this.edges = this.edges.filter(e => e.id !== element.id);
-                this.selections = [];
+                this.removeEdges(element.from, element.to, element.id);
                 break;
         }
+    }
+
+    removeEdges = (from: string, to: string, id: string) => {
+        this.nodes.forEach(n=> {
+            if(n.id === from){
+                (+n.data.outputsCount--).toString();
+            }else if(n.id === to){
+                (+n.data.inputsCount--).toString();
+            }
+        });
+        this.edges = this.edges.filter(e => e.id !== id);
+        this.selections = [];
     }
 
     onClick = (event: any, element: any, actionType: ActionTypes) => {
@@ -157,30 +137,78 @@ export class DataStore {
         }
     }
 
-    onPropertiesChange = (event: any) => {
+    onPropertiesChange = (event: any, actionType: ActionTypes) => {
         const {name, value} = event.target;
-        if(this.propertyModes.nodeMode){
-        this.activeElement.data = {...this.activeElement.data, [name] : value};
-        }else if(this.propertyModes.edgeMode) {
-            this.activeElement = {...this.activeElement, [name] : value};
+        switch(actionType) {
+            case ActionTypes.CHANGEDESICIONONYES:
+               this.selectNoYes.onYes = value;
+               this.activeElement = {...this.activeElement};
+            break;
+            case ActionTypes.CHANGEDESICIONONNO:
+                this.selectNoYes.onNo = value;
+                this.activeElement = {...this.activeElement};
+             break;
+            case ActionTypes.CHANGEOTHER: 
+                if(this.propertyModes.nodeMode){
+                    this.activeElement.data = {...this.activeElement.data, [name] : value};
+                }else if(this.propertyModes.edgeMode) {
+                    this.activeElement = {...this.activeElement, [name] : value};
+                }
+                this.activeElement = {...this.activeElement};
+            break;
         }
-        this.activeElement = {...this.activeElement};
     }
 
-    saveProperties = () => {
-        if(this.propertyModes.nodeMode){
-            this.nodes.filter(n=> n.id === this.activeElement.id)
-            .forEach(n=> {
-                n.data.text = this.activeElement.data.text;
-            });
-        }else if(this.propertyModes.edgeMode) {
-            this.edges.filter(e=> e.id === this.activeElement.id)
-            .forEach(e=> {
-                e.text = this.activeElement.text;
-            }); 
+    saveProperties = (actionType: ActionTypes) => {
+        let actEl = this.activeElement;
+        switch(actionType) {
+            case ActionTypes.SAVENODEDESICIONPROPERTIES:
+                let edgeId = "";   
+                this.edges.forEach(e => {
+                    if(e.from === actEl.id) 
+                        this.removeEdges(actEl.id, this.selectNoYes.onYes, e.id);
+                });
+                
+                this.nodes.filter(n=> n.id === actEl.id).forEach(n=> {n.data.text = actEl.data.text;});
+                
+                this.setEdges(actEl.id, this.selectNoYes.onYes, "On Yes");
+                this.setEdges(actEl.id, this.selectNoYes.onNo, "On No");
+               
+                this.selectNoYes.onYes = "";
+                this.selectNoYes.onNo = "";
+                break;
+            case ActionTypes.SAVEEDGEPROPERTIES:
+                this.edges.filter(e=> e.id === actEl.id).forEach(e=> {e.text = actEl.text;}); 
+                break;
+            case ActionTypes.SAVENODEOTHERPROPERTIES:
+                this.nodes.filter(n=> n.id === actEl.id).forEach(n=> {n.data.text = actEl.data.text;});
+                break;
         }
 
         this.nodes = this.nodes.filter(n=> n.id !== "");
+    }
+
+    setEdges = (fromId: string, toId: string, text: string) => {
+        let to = this.nodes.find(n => n.id === toId) as NodeData;
+        let from = this.nodes.find(n => n.id === fromId) as NodeData;
+
+        if(+from?.data.outputsCount < +from?.data.maxOutputsCount &&
+            +to?.data.inputsCount < +to?.data.maxInputsCount){
+            const edgeId = uuidv4();
+            this.edges = [...this.edges,
+                {
+                    id: edgeId,
+                    from: from.id,
+                    to: to?.id,
+                    parent: to?.parent,
+                    text: text,
+                }
+            ];
+            this.nodes.forEach(n => {
+                if(n.id === to?.id) (+n.data.inputsCount++).toString();
+                if(n.id === from?.id) (+n.data.outputsCount++).toString();
+            });
+        }
     }
 
     saveDiagram = () => {
