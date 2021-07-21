@@ -5,6 +5,9 @@ import { observer } from 'mobx-react-lite';
 import { Block } from '@models/Block';
 import { ActionTypes } from '@models/ActionTypes';
 import { ElementsComponent } from '../ElementsComponents/ElementsComponent';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import { IconButton } from '@material-ui/core';
 
 interface MainCanvasProps {
   edges: EdgeData[];
@@ -19,16 +22,15 @@ interface MainCanvasProps {
 export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
   onClick, removeElement, setData} : MainCanvasProps ) => {
   const canvasRef = useRef<CanvasRef | null>(null);
-  const [zoom, setZoom] = useState<number>(50);
+  const [zoom, setZoom] = useState<number>(0.7);
   const dragControls = useDragControls();
   const [activeDrag, setActiveDrag] = useState<Block | null>(null);
   const [droppable, setDroppable] = useState<boolean>(false);
   const [enteredNode, setEnteredNode] = useState<NodeData | null>(null);
 
   const onZoomChange = (event: any) => {
-    if(zoom > event.target.value){canvasRef?.current?.zoomOut?.();
-    }else{canvasRef?.current?.zoomIn?.();}
-    setZoom(event.target.value);
+    if(event === ActionTypes.ZOOMIN) {canvasRef?.current?.zoomIn?.();
+    }else if(event === ActionTypes.ZOOMOUT) {canvasRef?.current?.zoomOut?.();}
   }
 
   const onDragStart =  (event: any, data: Block) => {
@@ -60,7 +62,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
     onMatchChange: (match: string | null) => {
       let matchNode: NodeData | null = null;
       if (match) matchNode = nodes.find(n => n.id === match) as NodeData;
-      
+        
       setEnteredNode(matchNode);
       setDroppable(matchNode !== null);
     }
@@ -69,6 +71,17 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
     return (
       <div className="mainCanvasComponent">
           <div className="leftCanvas">
+          <div className="zoom_leftCanvas">
+                <h3>Zoom & Pan</h3>
+                <div className="zoom_leftCanvas_Zoom">
+                  <IconButton onClick={() => onZoomChange(ActionTypes.ZOOMOUT)}>
+                    <ZoomOutIcon />
+                  </IconButton>
+                  <IconButton onClick={() => onZoomChange(ActionTypes.ZOOMIN)}>
+                    <ZoomInIcon />
+                  </IconButton>
+                </div>
+            </div>
             <div className="blocks_leftCanvas">
               <h3>ToolBox</h3>
               {blocks?.map(block => (
@@ -81,29 +94,21 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 </motion.div>
               ))}
             </div>
-            <div className="zoom_leftCanvas">
-                <h3>Zoom & Pan</h3>
-                <div>
-                  <input 
-                    type="range" 
-                    min="1" 
-                    max="100" 
-                    value={zoom} 
-                    onChange={onZoomChange}
-                  />
-                </div>
-            </div>
           </div>
           <div className="middleCanvas">
             <Canvas
                 layoutOptions={{'elk.hierarchyHandling':'INCLUDE_CHILDREN'}}
                 className="canvas"
-                maxZoom={100}
-                minZoom={0}
+                zoomable={false}
+                maxZoom={0.7}
+                minZoom={-0.9}
                 zoom={zoom}
                 ref={canvasRef}
                 center={true}
                 fit={true}
+                pannable={true}
+                maxHeight={2000}
+                maxWidth={2000}
                 height={800}
                 width={document.documentElement.clientWidth-450}
                 nodes={nodes}
@@ -118,9 +123,9 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                     onRemove={(event, node) => removeElement(event, node, ActionTypes.REMOVENODE)}
                     onClick={(event, node) => onClick(event, node, ActionTypes.ONCLICKNODE)}
                   >
-                      {(node) => <ElementsComponent 
+                      {event => <ElementsComponent 
                       onClick={onClick}
-                      element={node}/>}
+                      element={event}/>}
                     </Node>
                   ))
                 }
@@ -136,7 +141,8 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 onMouseEnter={() => setDroppable(true)}
                 onMouseLeave={() => setDroppable(false)}
                 onZoomChange={z => setZoom(z)}
-                onLayoutChange={layout => console.log('Layout', layout)}
+                direction="RIGHT"
+                onLayoutChange={layout => {console.log(layout)}}
             />
             <motion.div
               drag

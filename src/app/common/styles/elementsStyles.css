@@ -84,4 +84,8 @@
   box-shadow: -9px 11px 7px 0px rgba(253, 71, 15, 0.34);
 }
 
+.hover{
+  border: 3px solid rgb(1, 64, 105);
+}
+
 

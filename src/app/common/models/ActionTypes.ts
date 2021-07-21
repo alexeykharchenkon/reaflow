@@ -7,4 +7,6 @@ export enum ActionTypes {
     SETNODESANDEDGES,
     SETEDGES,
     ONCLICKFOROBJ,
+    ZOOMIN,
+    ZOOMOUT,
 }

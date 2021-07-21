@@ -42,16 +42,30 @@ export class DataStore {
                         },
                     );
                 }else {
-                    result = addNodeAndEdge(
-                        this.nodes,
-                        this.edges,
-                        {
-                            id,
-                            data: {...block.nodeParams},
-                            width: +block.width,
-                            height: +block.height,
-                        },
-                    );
+                    if(enteredNode?.parent) {
+                        result = addNodeAndEdge(
+                            this.nodes,
+                            this.edges,
+                            {
+                                id,
+                                data: {...block.nodeParams},
+                                width: +block.width,
+                                height: +block.height,
+                                parent: enteredNode?.parent,
+                            },
+                        );
+                    }else{
+                        result = addNodeAndEdge(
+                            this.nodes,
+                            this.edges,
+                            {
+                                id,
+                                data: {...block.nodeParams},
+                                width: +block.width,
+                                height: +block.height,
+                            },
+                        );
+                    }
                 }
 
                 this.edges = result.edges;

@@ -1,5 +1,6 @@
 import { ActionTypes } from "@models/ActionTypes"
 import { Types } from "@models/Types"
+import { observer } from "mobx-react-lite";
 
 
 interface ElementsProps {
@@ -7,23 +8,16 @@ interface ElementsProps {
   onClick: any;
 }
 
-export const ElementsComponent = ({element, onClick} : ElementsProps) => {
+export const ElementsComponent = observer(({element, onClick} : ElementsProps) => {
     let forObjClassName = "element " + element.node.data.className;
     forObjClassName += element.node.data.checked ? " checked": "";
 
-    if(element?.node.data?.type.toString() === Types[Types.SubWorkflow]){
-      if(element.width < 250) element.width = 300;
-      if(element.height < 250) element.height = 300;
-    }
-    console.log(element)
     return (
       <foreignObject
         pointerEvents={"none"}
         className={forObjClassName}
         width={element.width}
         height={element.height}
-        x={0} 
-        y={0}
         onClick={()=> onClick("","", ActionTypes.ONCLICKFOROBJ)}
         >
           {element?.node.data?.type.toString() !== Types[Types.Decision] &&
@@ -37,4 +31,7 @@ export const ElementsComponent = ({element, onClick} : ElementsProps) => {
             </div>
           }
        </foreignObject>
-    )}
+    )});
+
+
+    

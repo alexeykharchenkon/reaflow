@@ -63,6 +63,11 @@
   align-items: center;
 }
 
+.zoom_leftCanvas_Zoom {
+  display: flex;
+  justify-content:space-between;
+}
+
 .middleCanvas {
   display: flex;
   flex-direction: column;
