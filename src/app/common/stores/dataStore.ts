@@ -162,17 +162,20 @@ export class DataStore {
     saveProperties = (actionType: ActionTypes) => {
         let actEl = this.activeElement;
         switch(actionType) {
-            case ActionTypes.SAVENODEDESICIONPROPERTIES:
-                let edgeId = "";   
+            case ActionTypes.SAVENODEDESICIONPROPERTIES: 
+                this.nodes.filter(n=> n.id === actEl.id).forEach(n=> {n.data.text = actEl.data.text;});
                 this.edges.forEach(e => {
                     if(e.from === actEl.id) 
                         this.removeEdges(actEl.id, this.selectNoYes.onYes, e.id);
                 });
-                
-                this.nodes.filter(n=> n.id === actEl.id).forEach(n=> {n.data.text = actEl.data.text;});
-                
-                this.setEdges(actEl.id, this.selectNoYes.onYes, "On Yes");
-                this.setEdges(actEl.id, this.selectNoYes.onNo, "On No");
+
+                let yesParent = this.nodes.find(n=> n.id === this.selectNoYes.onYes)?.parent;
+                let noParent = this.nodes.find(n=> n.id === this.selectNoYes.onNo)?.parent;
+
+                if(actEl.parent === yesParent)
+                    this.setEdges(actEl.id, this.selectNoYes.onYes, "On Yes");
+                if(actEl.parent === noParent)
+                    this.setEdges(actEl.id, this.selectNoYes.onNo, "On No");
                
                 this.selectNoYes.onYes = "";
                 this.selectNoYes.onNo = "";
