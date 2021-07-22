@@ -1,3 +1,4 @@
+import { Button, TextField } from "@material-ui/core";
 import { ActionTypes } from "@models/ActionTypes";
 import React from "react";
 
@@ -10,24 +11,21 @@ interface PropertiesEdgeProps {
 export const PropertiesEdgeComponent = ({element, onPropertiesChange, saveProperties} : PropertiesEdgeProps) => {
   
   return (
-        <div>
-          <div>
-            <label>
-              Label:
-              <input 
-                type="text" 
-                name="text" 
-                value={element?.text} 
-                onChange = {event => onPropertiesChange(event, ActionTypes.CHANGEOTHER)}
-                />
-            </label>
-            </div>
-            <div>
-            <button 
-              className="saveProperties"
-              onClick={() => saveProperties(ActionTypes.SAVEEDGEPROPERTIES)}
-            >Save Changes</button>
-          </div>
-        </div>
+    <div>
+      <h4>Text</h4>
+      <TextField 
+          value={element?.text}
+          name="text"
+          onChange={event => onPropertiesChange(event, ActionTypes.CHANGEOTHER)}
+      />
+      <Button 
+        variant="contained" 
+        color="primary"
+        style={{marginTop: '15px'}}
+        onClick={() => saveProperties(ActionTypes.SAVEEDGEPROPERTIES)}
+      >
+        Save Changes
+      </Button>
+    </div>
     );
   }

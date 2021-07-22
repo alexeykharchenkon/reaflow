@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity, MarkerArrow } from 'reaflow';
+import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity, MarkerArrow, Port } from 'reaflow';
 import { motion, useDragControls} from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import { Block } from '@models/Block';
@@ -107,9 +107,9 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 center={true}
                 fit={true}
                 pannable={true}
-                maxHeight={2000}
+                maxHeight={1000}
                 maxWidth={2000}
-                height={800}
+                height={700}
                 width={document.documentElement.clientWidth-450}
                 nodes={nodes}
                 edges={edges}

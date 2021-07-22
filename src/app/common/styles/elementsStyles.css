@@ -10,14 +10,15 @@
     pointer-events: none;
     margin-left: 80px;
     border-radius: 5px;
-    background: black;
+    background: dodgerblue;
     border: solid 1px #00c5be;
-    height: 40px;
-    width: 40px;
+    height: 80px;
+    width: 80px;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
   }
   .canvas {
     background:
@@ -42,11 +43,12 @@
 
  .element {
   display: flex;
-  border: 1px solid grey;
+  border: 1px solid rgb(48, 47, 47);
   align-items: center;
   justify-content: center;
   text-align: center;
   font-size: 10px;
+  box-shadow: -1px 1px 7px 0px rgba(54, 74, 252, 0.34);
  }
 .startElement {
    border-radius: 50%;
@@ -77,11 +79,12 @@
 
 .desicionElementText {
   transform: translateX(-15px) rotate(-45deg);
+  margin-top: "15px";
 }
 
 .checked {
-  border: 3px solid coral;
-  box-shadow: -9px 11px 7px 0px rgba(253, 71, 15, 0.34);
+  border: 2px solid rgb(83, 80, 255);
+  box-shadow: -3px 3px 7px 0px rgb(83, 80, 255);
 }
 
 .hover{

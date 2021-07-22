@@ -1,20 +1,19 @@
 import { ActionTypes } from "@models/ActionTypes";
-import { FormControl, Select, TextField } from "@material-ui/core";
+import { Button, FormControl, Select, TextField } from "@material-ui/core";
 import React from "react";
-import { EdgeData, NodeData } from "reaflow";
+import { NodeData } from "reaflow";
 import { SelectNoYes } from "@models/SelectNoYes";
 
 interface PropertiesDesicionProps {
   element: any;
   onPropertiesChange: any;
   nodes: NodeData[];
-  edges: EdgeData[];
   selectNoYes: SelectNoYes;
   saveProperties: any;
 }
 
 export const PropertiesDesicionComponent = ({element, onPropertiesChange,
-nodes, edges, selectNoYes, saveProperties} : PropertiesDesicionProps) => {
+nodes, selectNoYes, saveProperties} : PropertiesDesicionProps) => {
 
   return (
         <>
@@ -61,12 +60,14 @@ nodes, edges, selectNoYes, saveProperties} : PropertiesDesicionProps) => {
                     ))}
                 </Select>
             </FormControl>
-            <div>
-            <button 
-              className="saveProperties"
-              onClick={() => saveProperties(ActionTypes.SAVENODEDESICIONPROPERTIES)}
-            >Save Changes</button>
-          </div>
+            <Button 
+                variant="contained" 
+                color="primary"
+                style={{marginTop: '15px'}}
+                onClick={() => saveProperties(ActionTypes.SAVENODEDESICIONPROPERTIES)}
+            >
+                Save Changes
+            </Button>
         </>
     );
   }

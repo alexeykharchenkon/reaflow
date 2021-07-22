@@ -2,7 +2,7 @@ import React from "react";
 import { PropertyModes } from "@models/PropertyModes";
 import { PropertiesNodeComponent } from "./PropertiesNodeComponent";
 import { PropertiesEdgeComponent } from "./PropertiesEdgeComponent";
-import { EdgeData, NodeData } from "reaflow";
+import { NodeData } from "reaflow";
 import { SelectNoYes } from "@models/SelectNoYes";
 
 interface PropertiesProps {
@@ -11,12 +11,11 @@ interface PropertiesProps {
   saveProperties: any;
   propertyModes: PropertyModes;
   nodes: NodeData[];
-  edges: EdgeData[];
   selectNoYes: SelectNoYes;
 }
 
 export const PropertiesComponent = ({element, onPropertiesChange, saveProperties, 
-  propertyModes, nodes, edges, selectNoYes} : PropertiesProps) => {
+  propertyModes, nodes, selectNoYes} : PropertiesProps) => {
   
   return (
       <div className="propertiesComponent">
@@ -28,7 +27,6 @@ export const PropertiesComponent = ({element, onPropertiesChange, saveProperties
               element={element}
               onPropertiesChange={onPropertiesChange}
               nodes={nodes}
-              edges={edges}
               selectNoYes={selectNoYes}
               saveProperties={saveProperties}
             />
