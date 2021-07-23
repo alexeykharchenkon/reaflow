@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity, MarkerArrow, Port } from 'reaflow';
+import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity, MarkerArrow, Port} from 'reaflow';
 import { motion, useDragControls} from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import { Block } from '@models/Block';
@@ -7,7 +7,8 @@ import { ActionTypes } from '@models/ActionTypes';
 import { ElementsComponent } from '../ElementsComponents/ElementsComponent';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import { IconButton } from '@material-ui/core';
+import { Dialog, DialogTitle, IconButton } from '@material-ui/core';
+import { DialogComponent } from '../DialogComponents/DialogComponent';
 
 interface MainCanvasProps {
   edges: EdgeData[];
@@ -21,6 +22,11 @@ interface MainCanvasProps {
 
 export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
   onClick, removeElement, setData} : MainCanvasProps ) => {
+
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {setOpen(true)};
+  const handleClose = (value: string) => {setOpen(false)};
+
   const canvasRef = useRef<CanvasRef | null>(null);
   const [zoom, setZoom] = useState<number>(0.7);
   const dragControls = useDragControls();
@@ -45,6 +51,8 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
     setActiveDrag(null);
 
     onProximityDragEnd(event);
+
+    handleClickOpen()
   };
 
   const onDrag = (event: any) => {
@@ -114,18 +122,20 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 nodes={nodes}
                 edges={edges}
                 selections={selections}
-                onNodeLink={(from: NodeData, to: NodeData) => setData("", enteredNode, from, to, ActionTypes.SETEDGES)}
+                onNodeLink={(from: NodeData, to: NodeData, port: any) => setData("", enteredNode, from, to, ActionTypes.SETEDGES)}
                 node={
                   (n => (
                   <Node
                   {...n}
+                    port={<Port style={{fill: 'blue', stroke: 'white'}} rx={10} ry={10}/>}
                     className="node"
                     onRemove={(event, node) => removeElement(event, node, ActionTypes.REMOVENODE)}
                     onClick={(event, node) => onClick(event, node, ActionTypes.ONCLICKNODE)}
                   >
-                      {event => <ElementsComponent 
-                      onClick={onClick}
-                      element={event}/>}
+                      {(event:any) => <ElementsComponent 
+                        onClick={onClick}
+                        element={event}
+                      />}
                     </Node>
                   ))
                 }
@@ -141,7 +151,6 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 onMouseEnter={() => setDroppable(true)}
                 onMouseLeave={() => setDroppable(false)}
                 onZoomChange={z => setZoom(z)}
-                direction="RIGHT"
                 onLayoutChange={layout => {console.log(layout)}}
             />
             <motion.div
@@ -157,6 +166,11 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                   </div>
                 )}
             </motion.div>
+            <DialogComponent 
+              selectedValue={"Hello"} 
+              open={open} 
+              onClose={handleClose}
+            />
           </div> 
         </div>
     );

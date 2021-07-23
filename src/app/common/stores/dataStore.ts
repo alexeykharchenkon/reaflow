@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { addNodeAndEdge, EdgeData, NodeData } from "reaflow";
+import { addNodeAndEdge, EdgeData, NodeData} from "reaflow";
 import { Block } from "@models/Block";
 import { v4 as uuidv4 } from 'uuid';
 import { ActionTypes } from "@models/ActionTypes";
@@ -28,24 +28,33 @@ export class DataStore {
     
     constructor(){
         makeAutoObservable(this);
+        const startBlock = dataService.blockGenerate();
+        var result = this.addNodeAndEdgeResult(startBlock, "", startBlock.id);
+        this.nodes = result.nodes;
     }
 
     setData = (block: Block, enteredNode: NodeData, from: NodeData, to: NodeData, actionType: ActionTypes) => {
         switch(actionType) {
             case ActionTypes.SETNODESANDEDGES:
                 var result;
+                const id = uuidv4();
                 if(enteredNode?.data.type === Types[Types.SubWorkflow]) {
-                    result = this.addNodeAndEdgeResult(block, enteredNode?.id);
+                    result = this.addNodeAndEdgeResult(block, enteredNode?.id, id);
+                    this.nodes = result.nodes;
                 }else {
                     if(enteredNode?.parent) {
-                        result = this.addNodeAndEdgeResult(block, enteredNode?.parent);
+                        result = this.addNodeAndEdgeResult(block, enteredNode?.parent, id);
+                        this.nodes = result.nodes;
                     }else{
-                        result = this.addNodeAndEdgeResult(block, "");
+                        result = this.addNodeAndEdgeResult(block, "", id);
+                        this.nodes = result.nodes;
+                        if(block.nodeParams.type === Types[Types.SubWorkflow]) {
+                            const startBlock = dataService.blockGenerate();
+                            result = this.addNodeAndEdgeResult(startBlock, id, startBlock.id);
+                            this.nodes = result.nodes;
+                        }
                     }
                 }
-
-                this.edges = result.edges;
-                this.nodes = result.nodes;
                 break;
             case ActionTypes.SETEDGES:
                 if(from.data.type !== Types[Types.Decision])
@@ -54,19 +63,18 @@ export class DataStore {
         }
     }
 
-    addNodeAndEdgeResult = (block: Block, parentId: string) : any => {
-        const id = uuidv4();
-        return addNodeAndEdge(
-            this.nodes,
-            this.edges,
-            {
-                id,
-                data: {...block.nodeParams},
-                width: +block.width,
-                height: +block.height,
-                parent: parentId,
-            },
-        );
+    addNodeAndEdgeResult = (block: Block, parentId: string, id: string) : any => {
+            return addNodeAndEdge(
+                this.nodes,
+                this.edges,
+                {
+                    id,
+                    data: {...block.nodeParams},
+                    width: +block.width,
+                    height: +block.height,
+                    parent: parentId,
+                },
+            );
     } 
 
     removeElement = (event: any, element: any, actionType: ActionTypes)  => {
@@ -116,6 +124,7 @@ export class DataStore {
                 this.nodes.forEach(n=> n.data.checked = false);
                 break;
             case ActionTypes.ONCLICKNODE:
+                console.log("ForObj");
                 this.selections = [element.id];
                 this.activeElement = element as NodeData;
                 this.propertyModes.nodeMode = true;
@@ -124,6 +133,7 @@ export class DataStore {
                     if(n.id===element.id){n.data.checked = true;
                     }else{n.data.checked = false;} 
                 });
+                console.log(event)
                 break;
             case ActionTypes.ONCLICKCANVAS:
                 this.selections = [];
@@ -132,8 +142,26 @@ export class DataStore {
                 this.activeElement = null;
                 this.nodes.forEach(n=> n.data.checked = false);
                 break;
-            case ActionTypes.ONCLICKFOROBJ:
-                console.log("ForObj");
+       /*     case ActionTypes.ONCLICKFOROBJADD:
+                console.log("ForObjAdd");
+                const id = uuidv4();
+                const startBlock = dataService.blockGenerate();
+                const result = this.addNodeAndEdgeResult(startBlock, "", startBlock.id);
+                this.nodes = result.nodes;
+                console.log(this.nodes)
+                break;
+            case ActionTypes.ONCLICKNODEFOROBJ:
+                console.log("For OBj Node")
+                this.selections = [element.id];
+                this.activeElement = element as NodeData;
+                this.propertyModes.nodeMode = true;
+                this.propertyModes.edgeMode = false;
+                this.nodes.forEach(n=> { 
+                    if(n.id===element.id){ n.data.checked = true;
+                    }else{n.data.checked = false;} 
+                });
+                
+                break;*/
         }
     }
 

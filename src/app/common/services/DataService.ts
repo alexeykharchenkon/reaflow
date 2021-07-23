@@ -1,5 +1,6 @@
 import { Block } from "@models/Block";
 import { Types } from "@models/Types";
+import { NodeData } from "reaflow";
 import { v4 as uuidv4 } from 'uuid';
 
 class DataService {
@@ -93,6 +94,45 @@ class DataService {
     ];
 
     return blocks;
+    }
+
+    nodeGenerate () : NodeData {
+        const node = {
+            id: uuidv4(),
+            data: {
+                inputsCount: '0',
+                outputsCount: '0',
+                maxInputsCount: '0',
+                maxOutputsCount: '1',
+                type: Types[Types.Start],
+                className: "startElement",
+                text: "Start",
+                checked: false,
+            },
+                width: 70,
+                height: 70,
+            }
+        return node;
+    }
+    blockGenerate () : Block{
+        const block =  {
+            id: uuidv4(),
+            name: "Start",
+            nodeParams: {
+                inputsCount: '0',
+                outputsCount: '0',
+                maxInputsCount: '0',
+                maxOutputsCount: '1',
+                type: Types[Types.Start],
+                className: "startElement",
+                text: "Start",
+                checked: false,
+            },
+            className: "startBlockElement",
+            width: "70",
+            height: "70",
+        }                
+        return block;
     }
 }
 

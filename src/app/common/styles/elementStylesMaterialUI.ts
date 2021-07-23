@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { Height } from '@material-ui/icons';
 
 export const useStyles = makeStyles((theme) => ({
 start: {
@@ -31,10 +32,22 @@ phaseTypography: {
   height: '100px',
 },
 subWorkFlow: {
-  background:'#919169', 
+  position: 'fixed',
+  minWidth: '200px',
+  backgroundColor:'#919169', 
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  flexWrap: 'nowrap',
+  justifyContent: 'space-between',
+  fontSize: '14px',
 },
 subWorkFlowTypography: {
+  display: 'inline-block',
   background:'#919169', 
+},
+subWorkFlowAddButton: {
+  display: 'inline-block',
 },
 decision: {
   background:'#DDDD7A', 
