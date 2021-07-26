@@ -7,6 +7,7 @@ import { dataService } from "@services/DataService";
 import { PropertyModes } from "@models/PropertyModes";
 import { Types } from "@models/Types";
 import { SelectNoYes } from "@models/SelectNoYes";
+import { PopoverType } from "../models/PopoverType";
 
 export class DataStore {
     blocks: Block [] = dataService.blocksInit();
@@ -14,17 +15,17 @@ export class DataStore {
     nodes: NodeData[] = [];
     selections: string[] = [];
 
-    selectNoYes: SelectNoYes = {
-        onYes: "",
-        onNo: "",
-    }
+    selectNoYes: SelectNoYes = {onYes: "", onNo: ""}
 
-    propertyModes: PropertyModes = {
-        nodeMode: false,
-        edgeMode: false,
-    }
+    propertyModes: PropertyModes = {nodeMode: false, edgeMode: false}
 
     activeElement: any = null;
+
+    popoverElement: PopoverType = {
+        node: null,
+        currentTarget: null,
+        connectTo: "",
+    };
     
     constructor(){
         makeAutoObservable(this);
@@ -114,6 +115,29 @@ export class DataStore {
         this.selections = [];
     }
 
+    setEdges = (fromId: string, toId: string, text: string) => {
+        let to = this.nodes.find(n => n.id === toId) as NodeData;
+        let from = this.nodes.find(n => n.id === fromId) as NodeData;
+
+        if(+from?.data.outputsCount < +from?.data.maxOutputsCount &&
+            +to?.data.inputsCount < +to?.data.maxInputsCount){
+            const edgeId = uuidv4();
+            this.edges = [...this.edges,
+                {
+                    id: edgeId,
+                    from: from.id,
+                    to: to?.id,
+                    parent: to?.parent,
+                    text: text,
+                }
+            ];
+            this.nodes.forEach(n => {
+                if(n.id === to?.id) (+n.data.inputsCount++).toString();
+                if(n.id === from?.id) (+n.data.outputsCount++).toString();
+            });
+        }
+    }
+
     onClick = (event: any, element: any, actionType: ActionTypes) => {
         switch(actionType) {
             case ActionTypes.ONCLICKEDGE:
@@ -124,7 +148,6 @@ export class DataStore {
                 this.nodes.forEach(n=> n.data.checked = false);
                 break;
             case ActionTypes.ONCLICKNODE:
-                console.log("ForObj");
                 this.selections = [element.id];
                 this.activeElement = element as NodeData;
                 this.propertyModes.nodeMode = true;
@@ -133,7 +156,8 @@ export class DataStore {
                     if(n.id===element.id){n.data.checked = true;
                     }else{n.data.checked = false;} 
                 });
-                console.log(event)
+                this.popoverElement.currentTarget = event.currentTarget;
+                this.popoverElement.node = this.activeElement;
                 break;
             case ActionTypes.ONCLICKCANVAS:
                 this.selections = [];
@@ -142,26 +166,6 @@ export class DataStore {
                 this.activeElement = null;
                 this.nodes.forEach(n=> n.data.checked = false);
                 break;
-       /*     case ActionTypes.ONCLICKFOROBJADD:
-                console.log("ForObjAdd");
-                const id = uuidv4();
-                const startBlock = dataService.blockGenerate();
-                const result = this.addNodeAndEdgeResult(startBlock, "", startBlock.id);
-                this.nodes = result.nodes;
-                console.log(this.nodes)
-                break;
-            case ActionTypes.ONCLICKNODEFOROBJ:
-                console.log("For OBj Node")
-                this.selections = [element.id];
-                this.activeElement = element as NodeData;
-                this.propertyModes.nodeMode = true;
-                this.propertyModes.edgeMode = false;
-                this.nodes.forEach(n=> { 
-                    if(n.id===element.id){ n.data.checked = true;
-                    }else{n.data.checked = false;} 
-                });
-                
-                break;*/
         }
     }
 
@@ -219,26 +223,24 @@ export class DataStore {
         this.nodes = this.nodes.filter(n=> n.id !== "");
     }
 
-    setEdges = (fromId: string, toId: string, text: string) => {
-        let to = this.nodes.find(n => n.id === toId) as NodeData;
-        let from = this.nodes.find(n => n.id === fromId) as NodeData;
+    onPopoverChange = (event: any, actionType: ActionTypes) => {
+        const {name, value} = event?.target;
+        let actEl = this.activeElement;
+        let popEl = this.popoverElement;
 
-        if(+from?.data.outputsCount < +from?.data.maxOutputsCount &&
-            +to?.data.inputsCount < +to?.data.maxInputsCount){
-            const edgeId = uuidv4();
-            this.edges = [...this.edges,
-                {
-                    id: edgeId,
-                    from: from.id,
-                    to: to?.id,
-                    parent: to?.parent,
-                    text: text,
-                }
-            ];
-            this.nodes.forEach(n => {
-                if(n.id === to?.id) (+n.data.inputsCount++).toString();
-                if(n.id === from?.id) (+n.data.outputsCount++).toString();
-            });
+        switch(actionType) {
+            case ActionTypes.CHANGECONNECTTO:
+                this.popoverElement.connectTo = value;
+                this.popoverElement = {...this.popoverElement};
+            break;
+            case ActionTypes.SAVECONNECTTO:
+                this.edges.forEach(e => {
+                    e.from === actEl.id && this.removeEdges(e?.from as string, e?.to as string, e.id);
+                });
+
+                let parentId = this.nodes.find(n=> n.id === popEl.connectTo)?.parent;
+                actEl.parent === parentId && this.setEdges(actEl.id, popEl.connectTo, "");
+            break;
         }
     }
 

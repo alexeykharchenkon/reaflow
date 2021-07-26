@@ -16,6 +16,8 @@ export const BottomPageComponent = observer(() => {
             onClick={dataStore.onClick}
             removeElement={dataStore.removeElement}
             setData={dataStore.setData} 
+            popoverElement={dataStore.popoverElement}
+            onPopoverChange={dataStore.onPopoverChange}
           />
           <PropertiesComponent
             element={dataStore.activeElement}

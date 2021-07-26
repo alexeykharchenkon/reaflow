@@ -1,12 +1,7 @@
 import { useStyles } from "@styles/elementStylesMaterialUI";
 import { Card, Typography } from "@material-ui/core";
-import { ActionTypes } from "@models/ActionTypes"
 import { Types } from "@models/Types"
 import { SubWorkFlowComponent } from "./SubWorkflowComponent";
-import { NodeData } from "reaflow";
-import { useEffect, useState } from "react";
-import { observer } from "mobx-react-lite";
-import { useStore } from "@stores/rootStore";
 
 interface ElementsProps {
   element: any;
@@ -15,11 +10,10 @@ interface ElementsProps {
 
 export const ElementsComponent = ({element, onClick} : ElementsProps) => {
     const classes = useStyles();
-    const {dataStore} = useStore();  
     
     let forObjClassName = "element " + element.node.data.className;
     forObjClassName += element.node.data.checked ? " checked": "";
-   // console.log(element)
+
     return (
       <foreignObject
         pointerEvents={"none"}
