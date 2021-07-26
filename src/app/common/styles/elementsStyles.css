@@ -49,6 +49,7 @@
   text-align: center;
   font-size: 10px;
   box-shadow: -1px 1px 7px 0px rgba(54, 74, 252, 0.34);
+  border-radius: 5%;
  }
 .startElement {
    border-radius: 50%;
@@ -69,9 +70,11 @@
 }
 .desicionElement {
   background: rgb(221, 221, 122);
-  transform: translateX(50px) rotate(45deg);
   height: 70px;
   width: 70px;
+  text-align: right;
+  font-size: 13px;
+  transform: translateX(50px) rotate(45deg);
 }
 .subWorkflowElement {
   background: rgb(145, 145, 105);
@@ -79,7 +82,6 @@
 
 .desicionElementText {
   transform: translateX(-15px) rotate(-45deg);
-  margin-top: "15px";
 }
 
 .checked {

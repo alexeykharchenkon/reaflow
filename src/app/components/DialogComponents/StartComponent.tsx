@@ -1,8 +1,9 @@
 import { useStyles } from "@styles/popoverStyles";
-import { Container, FormControl, IconButton, InputLabel, Select } from "@material-ui/core";
+import { Container, FormControl, IconButton, Select } from "@material-ui/core";
 import { NodeData } from "reaflow";
 import { PopoverType } from "@models/PopoverType";
 import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { ActionTypes } from "@models/ActionTypes";
   
 export interface StartProps {
@@ -16,19 +17,17 @@ export const StartComponent = ({onPopoverChange, popoverElement, nodes}: StartPr
 
     return (
             <Container className={classes.start}>
-              <Container>
+              <div>
+                  Connect to<br/>
               <FormControl>
-                <InputLabel id="label-select">Connect to node</InputLabel>
                   <Select
-                      labelId="label-select"
                       native
                       value={popoverElement?.connectTo}
-                      style={{minWidth:'150px'}}
                       onChange={event => onPopoverChange(event, ActionTypes.CHANGECONNECTTO)}
                   >
                       <option></option>
                       {nodes?.map(node => (
-                          node.id !== popoverElement?.node?.id &&
+                          node.id !== popoverElement?.node?.id && node?.parent === popoverElement?.node?.parent &&
                           <option 
                               key={node?.id}
                               value={node?.id}
@@ -36,15 +35,21 @@ export const StartComponent = ({onPopoverChange, popoverElement, nodes}: StartPr
                       ))}
                   </Select>
                 </FormControl>
-                </Container>
-                <Container>
+                </div>
+                <div>
                   <IconButton 
                     className={classes.linkButton}
                     onClick={event => onPopoverChange(event, ActionTypes.SAVECONNECTTO)}
                   >
-                  <SaveIcon />
+                    <SaveIcon />
                   </IconButton>
-                </Container>
+                  <IconButton 
+                    className={classes.linkButton}
+                    onClick={event => onPopoverChange(event, ActionTypes.DELETENODE)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
               </Container>
     );
   }

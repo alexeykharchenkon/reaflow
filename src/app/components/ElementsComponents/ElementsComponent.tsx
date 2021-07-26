@@ -1,7 +1,6 @@
 import { useStyles } from "@styles/elementStylesMaterialUI";
 import { Card, Typography } from "@material-ui/core";
-import { Types } from "@models/Types"
-import { SubWorkFlowComponent } from "./SubWorkflowComponent";
+import { Types } from "@models/Types";
 
 interface ElementsProps {
   element: any;
@@ -44,10 +43,15 @@ export const ElementsComponent = ({element, onClick} : ElementsProps) => {
             </Card>
           }
           {element?.node.data?.type === Types[Types.SubWorkflow] &&
-           <SubWorkFlowComponent 
-              element={element}
-              onClick={onClick}
-           />
+           //<SubWorkFlowComponent 
+          //    element={element}
+          //    onClick={onClick}
+         //  />
+         <Card className={classes.subWorkFlow}>
+               <Typography className={classes.subWorkFlowTypography}>
+                  {element.node.data.text}
+              </Typography>
+            </Card>
           }
           {element?.node.data?.type === Types[Types.Decision] &&
             <div className="desicionElementText">

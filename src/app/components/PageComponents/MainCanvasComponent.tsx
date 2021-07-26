@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity, MarkerArrow, Port} from 'reaflow';
+import { CanvasRef, Node, Canvas, NodeData, EdgeData, Edge, useProximity, MarkerArrow} from 'reaflow';
 import { motion, useDragControls} from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import { Block } from '@models/Block';
@@ -8,7 +8,7 @@ import { ElementsComponent } from '../ElementsComponents/ElementsComponent';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import { IconButton } from '@material-ui/core';
-import { PopoverComponent } from '../PopoverComponent/PopoverComponent';
+import { PopoverComponent } from '../DialogComponents/PopoverComponent';
 import { PopoverType } from '@models/PopoverType';
 
 interface MainCanvasProps {
@@ -26,20 +26,12 @@ interface MainCanvasProps {
 export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
   onClick, removeElement, setData, popoverElement, onPopoverChange} : MainCanvasProps ) => {
 
-  const [open, setOpen] = useState(false);
-  const popoverClose = () => {setOpen(false)};
-
   const canvasRef = useRef<CanvasRef | null>(null);
   const [zoom, setZoom] = useState<number>(0.7);
   const dragControls = useDragControls();
   const [activeDrag, setActiveDrag] = useState<Block | null>(null);
   const [droppable, setDroppable] = useState<boolean>(false);
   const [enteredNode, setEnteredNode] = useState<NodeData | null>(null);
-
-  const onNodeClick = (event:any, node:NodeData)  => {
-    onClick(event, node, ActionTypes.ONCLICKNODE);
-    setOpen(true);
-  }
 
   const onZoomChange = (event: any) => {
     if(event === ActionTypes.ZOOMIN) {canvasRef?.current?.zoomIn?.();
@@ -131,10 +123,10 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                   (n => (
                   <Node
                   {...n}
-                    port={<Port style={{fill: 'blue', stroke: 'white'}} rx={10} ry={10}/>}
+                   // port={<Port style={{fill: 'blue', stroke: 'white'}} rx={10} ry={10}/>}
                     className="node"
-                    onRemove={(event, node) => removeElement(event, node, ActionTypes.REMOVENODE)}
-                    onClick={(event, node) => onNodeClick(event, node)}
+                   // onRemove={(event, node) => removeElement(event, node, ActionTypes.REMOVENODE)}
+                    onClick={(event, node) => onClick(event, node, ActionTypes.ONCLICKNODE)}
                   >
                       {(event:any) => <ElementsComponent 
                         onClick={onClick}
@@ -155,7 +147,7 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 onMouseEnter={() => setDroppable(true)}
                 onMouseLeave={() => setDroppable(false)}
                 onZoomChange={z => setZoom(z)}
-                onLayoutChange={layout => {console.log(layout)}}
+                onLayoutChange={layout => {}}
             />
             <motion.div
               drag
@@ -171,8 +163,6 @@ export const MainCanvasComponent = observer(({edges, nodes, blocks, selections,
                 )}
             </motion.div>
             <PopoverComponent 
-              open={open} 
-              onClose={popoverClose}
               nodes={nodes}
               popoverElement={popoverElement}
               onPopoverChange={onPopoverChange}

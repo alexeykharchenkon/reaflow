@@ -25,6 +25,8 @@ export class DataStore {
         node: null,
         currentTarget: null,
         connectTo: "",
+        selectNoYes: {onYes: "", onNo: ""},
+        isOpen: false,
     };
     
     constructor(){
@@ -81,26 +83,30 @@ export class DataStore {
     removeElement = (event: any, element: any, actionType: ActionTypes)  => {
         switch(actionType) {
             case ActionTypes.REMOVENODE:
-                this.selections = [];
-                this.edges.forEach(e=> {
-                    if(e.from === element.id){
-                        this.nodes.forEach(n=> {
-                            if(e.to === n.id)(+n.data.inputsCount--).toString();
-                        });
-                    }else if(e.to === element.id){
-                        this.nodes.forEach(n=> {
-                            if(e.from === n.id)(+n.data.outputsCount--).toString();
-                        });
-                    }
-                });
-                this.nodes = this.nodes.filter(n => n.id !== element.id);
-                this.edges = this.edges.filter(e => e.from !== element.id);
-                this.edges = this.edges.filter(e => e.to !== element.id);
+                this.removeNode(element);
                 break;
             case ActionTypes.REMOVEEDGE:
                 this.removeEdges(element.from, element.to, element.id);
                 break;
         }
+    }
+
+    removeNode = (element: any) => {
+        this.selections = [];
+        this.edges.forEach(e=> {
+            if(e.from === element.id){
+                this.nodes.forEach(n=> {
+                    if(e.to === n.id)(+n.data.inputsCount--).toString();
+                });
+            }else if(e.to === element.id){
+                this.nodes.forEach(n=> {
+                    if(e.from === n.id)(+n.data.outputsCount--).toString();
+                });
+            }
+        });
+        this.nodes = this.nodes.filter(n => n.id !== element.id);
+        this.edges = this.edges.filter(e => e.from !== element.id);
+        this.edges = this.edges.filter(e => e.to !== element.id);
     }
 
     removeEdges = (from: string, to: string, id: string) => {
@@ -148,23 +154,24 @@ export class DataStore {
                 this.nodes.forEach(n=> n.data.checked = false);
                 break;
             case ActionTypes.ONCLICKNODE:
-                this.selections = [element.id];
+               // this.selections = [element.id];
                 this.activeElement = element as NodeData;
                 this.propertyModes.nodeMode = true;
                 this.propertyModes.edgeMode = false;
-                this.nodes.forEach(n=> { 
-                    if(n.id===element.id){n.data.checked = true;
-                    }else{n.data.checked = false;} 
-                });
-                this.popoverElement.currentTarget = event.currentTarget;
-                this.popoverElement.node = this.activeElement;
+                this.nodes.forEach(n => n.data.checked = n.id === element.id ? true: false);
+                if(element?.data.type !== Types[Types.End]) {
+                    this.popoverElement.currentTarget = event.currentTarget;
+                    this.popoverElement.node = this.activeElement;
+                    this.popoverElement.isOpen = true;
+                    this.popoverElement = {...this.popoverElement};
+                }
                 break;
             case ActionTypes.ONCLICKCANVAS:
                 this.selections = [];
                 this.propertyModes.nodeMode = false;
                 this.propertyModes.edgeMode = false;
                 this.activeElement = null;
-                this.nodes.forEach(n=> n.data.checked = false);
+                this.nodes.forEach(n => n.data.checked = false);
                 break;
         }
     }
@@ -196,19 +203,7 @@ export class DataStore {
         switch(actionType) {
             case ActionTypes.SAVENODEDESICIONPROPERTIES: 
                 this.nodes.filter(n=> n.id === actEl.id).forEach(n=> {n.data.text = actEl.data.text;});
-                this.edges.forEach(e => {
-                    if(e.from === actEl.id) 
-                        this.removeEdges(actEl.id, this.selectNoYes.onYes, e.id);
-                });
-
-                let yesParent = this.nodes.find(n=> n.id === this.selectNoYes.onYes)?.parent;
-                let noParent = this.nodes.find(n=> n.id === this.selectNoYes.onNo)?.parent;
-
-                if(actEl.parent === yesParent)
-                    this.setEdges(actEl.id, this.selectNoYes.onYes, "On Yes");
-                if(actEl.parent === noParent)
-                    this.setEdges(actEl.id, this.selectNoYes.onNo, "On No");
-               
+                this.connectDecision(actEl, this.selectNoYes);
                 this.selectNoYes.onYes = "";
                 this.selectNoYes.onNo = "";
                 break;
@@ -224,25 +219,63 @@ export class DataStore {
     }
 
     onPopoverChange = (event: any, actionType: ActionTypes) => {
-        const {name, value} = event?.target;
-        let actEl = this.activeElement;
+        const {value} = event?.target;
         let popEl = this.popoverElement;
 
         switch(actionType) {
             case ActionTypes.CHANGECONNECTTO:
                 this.popoverElement.connectTo = value;
                 this.popoverElement = {...this.popoverElement};
-            break;
+                break;
+            case ActionTypes.CHANGECONNECTONYES:
+                this.popoverElement.selectNoYes.onYes = value;
+                this.popoverElement = {...this.popoverElement};
+                break;
+            case ActionTypes.CHANGECONNECTONNO:
+                this.popoverElement.selectNoYes.onNo = value;
+                this.popoverElement = {...this.popoverElement};
+                break;
             case ActionTypes.SAVECONNECTTO:
-                this.edges.forEach(e => {
-                    e.from === actEl.id && this.removeEdges(e?.from as string, e?.to as string, e.id);
-                });
-
-                let parentId = this.nodes.find(n=> n.id === popEl.connectTo)?.parent;
-                actEl.parent === parentId && this.setEdges(actEl.id, popEl.connectTo, "");
-            break;
+                this.popoverElement.isOpen = false;
+                this.connectNode(popEl.node, popEl.connectTo);
+                this.popoverElement.connectTo = "";
+                break;
+            case ActionTypes.SAVECONNECTYESNO:
+                this.popoverElement.isOpen = false;
+                this.connectDecision(popEl.node, popEl.selectNoYes);
+                this.popoverElement.selectNoYes.onYes = "";
+                this.popoverElement.selectNoYes.onNo = "";
+                break;
+            case ActionTypes.DELETENODE:
+                this.popoverElement.isOpen = false;
+                this.removeNode(popEl.node);
+                break;
+            case ActionTypes.ONPOPOVERCLOSE:
+                this.popoverElement.isOpen = false;
+                this.popoverElement = {...this.popoverElement};
+                break;
         }
     }
+
+    connectNode = (node: NodeData, connectTo: string) => {
+        this.edges.forEach(e => {
+            e.from === node.id && this.removeEdges(e?.from as string, e?.to as string, e.id);
+        });
+        let parentId = this.nodes.find(n=> n.id === connectTo)?.parent;
+        node.parent === parentId && this.setEdges(node.id, connectTo, "");
+    }
+
+    connectDecision = (node: NodeData, selectNoYes: SelectNoYes) => {
+        this.edges.forEach(e => {
+            e.from === node.id && this.removeEdges(e?.from as string, e?.to as string, e.id);
+        });
+
+        let yesParent = this.nodes.find(n=> n.id === selectNoYes.onYes)?.parent;
+        let noParent = this.nodes.find(n=> n.id === selectNoYes.onNo)?.parent;
+
+        node.parent === yesParent && this.setEdges(node.id, selectNoYes.onYes, "On Yes");
+        node.parent === noParent && this.setEdges(node.id, selectNoYes.onNo, "On No"); 
+    } 
 
     saveDiagram = () => {
         localStorage.setItem("nodes", JSON.stringify(this.nodes));

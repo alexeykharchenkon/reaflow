@@ -34,7 +34,7 @@ nodes, selectNoYes, saveProperties} : PropertiesDesicionProps) => {
                 >
                     <option></option>
                     {nodes?.map(node => (
-                        node.id !== element.id &&
+                        node.id !== element.id && node?.parent === element?.parent &&
                         <option 
                             key={node.id}
                             value={node?.id}
@@ -52,7 +52,7 @@ nodes, selectNoYes, saveProperties} : PropertiesDesicionProps) => {
                 >
                     <option></option>
                     {nodes?.map(node => (
-                        node.id !== element.id &&
+                        node.id !== element.id && node?.parent === element?.parent &&
                         <option 
                             key={node.id}
                             value={node?.id}

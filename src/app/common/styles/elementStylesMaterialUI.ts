@@ -31,18 +31,11 @@ phaseTypography: {
   height: '100px',
 },
 subWorkFlow: {
-  position: 'fixed',
-  minWidth: '200px',
+ // minWidth: '200px',
   backgroundColor:'#919169', 
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  flexWrap: 'nowrap',
-  justifyContent: 'space-between',
-  fontSize: '14px',
+  textAlign: 'center',
 },
 subWorkFlowTypography: {
-  display: 'inline-block',
   background:'#919169', 
 },
 subWorkFlowAddButton: {
@@ -51,8 +44,7 @@ subWorkFlowAddButton: {
 decision: {
   background:'#DDDD7A', 
   width: '100px', 
-  height: '100px',
-  
+  height: '100px',  
 },
 decisionTypography: {
   background:'#DDDD7A', 
